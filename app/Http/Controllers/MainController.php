@@ -133,11 +133,13 @@ class MainController extends Controller
         if($request->ajax()) {
             if(request('query')){
 
-            $data = (new Search())
-            ->registerModel(FixingDetail::class, 'name')
-            ->registerModel(Product::class, 'name')
-            ->perform($request->input('query'));
-            return view('components.search-ajax',compact('data'));
+            // $data = (new Search())
+            // ->registerModel(FixingDetail::class, 'name')
+            // ->registerModel(Product::class, 'name')
+            // ->search(request('query') );
+             $products = Product::where('name', 'LIKE', '%' . request('query') . '%')->orderBy('price','ASC')->paginate(3);
+             $fixing_details = FixingDetail::where('name', 'LIKE', '%' . request('query') . '%')->paginate(3);
+            return view('components.search-ajax',compact('products','fixing_details'));
             } else {
                 return false;
             }
